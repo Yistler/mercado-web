@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/bc7d9770ac.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Minimarket</title>
+</head>
+
+<body>
+    <div>
+        {{> menu}}
+    </div>
+    <div class="container">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {{> productos}}
+        </div>
+    </div>
+
+    <script>
+        let elegidos = [];
+
+        document.querySelectorAll('.agregar').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const nombre = event.target.dataset.nombre;
+                if (!elegidos.includes(nombre)) {
+                    elegidos.push(nombre);
+                    event.target.classList.add('btn-secondary');
+                    event.target.classList.remove('btn-info');
+                } else {
+                    const index = elegidos.indexOf(nombre);
+                    elegidos.splice(index, 1);
+                    event.target.classList.remove('btn-secondary');
+                    event.target.classList.add('btn-info');
+                }
+            });
+        });
+
+        document.getElementById('verSeleccion').addEventListener('click', () => {
+            const modalBody = document.getElementById('modalBody');
+            modalBody.innerHTML = elegidos.map(nombre =>
+                `<img src="public/${nombre}.png" alt="${nombre}" style="max-width:100%; height:auto;">`
+            ).join('');
+            $('#elegidoModal').modal('show');
+        });
+
+        document.getElementById('borrar').addEventListener('click', () => {
+            elegidos = [];
+            document.querySelectorAll('.btn-secondary').forEach(button => {
+                button.classList.remove('btn-secondary');
+                button.classList.add('btn-info');
+            });
+            $('#elegidoModal').modal('hide');
+        });
+    </script>
+</body>
+
+</html>
